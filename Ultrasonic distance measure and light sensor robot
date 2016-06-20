@@ -1,0 +1,203 @@
+// Freddy Schrammm  Ultrasonic And light sensor robot.
+
+
+// Control pins for the right half of the H-bridge
+const int enable2 = 9; // PWM pin for speed control
+const int in3 = 8;
+const int in4 = 7;
+
+//other half
+const int enable1 = 6; // PWM pin for speed control
+const int in1 = 4;
+const int in2 = 2;
+
+// ultrasonic measure Sensor
+const int trigPin = 12;
+const int echoPin = 11;
+
+
+
+// light sensors
+const int leftLDR = A0;
+const int rightLDR = A1;
+ 
+
+
+void setup() {
+
+  Serial.begin (9600);
+
+  // ultrasonic pins
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+  // motors
+  pinMode( enable1, OUTPUT);
+  pinMode( in1, OUTPUT);
+  pinMode( in2, OUTPUT);
+
+  pinMode( enable2, OUTPUT);
+  pinMode( in3, OUTPUT);
+  pinMode( in4, OUTPUT);
+
+  Serial.begin(9600);
+  analogWrite (enable1, 200);
+  analogWrite (enable2, 200);
+
+}
+
+
+
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+
+Serial.println("hello Fron Ultrasonic MeasureSetup");
+
+
+  long duration, distance;
+
+  
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2); // low for 2 microseconds
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10); // high for 10 microseconds
+  digitalWrite(trigPin, LOW);
+  duration = pulseIn(echoPin, HIGH); // measure the time to the echo
+  distance = (duration / 2) / 29.1; // calculate the distance in cm
+  
+  
+  Serial.println("helloFromRoomtomoveForward");
+  
+  if (distance < 20 || distance < 0) {
+
+// will move the motor forward
+    
+    // left motor
+    digitalWrite (in1, HIGH);
+    digitalWrite (in2, LOW);
+    delay (1000);
+    //right motor
+    digitalWrite (in3, LOW);
+    digitalWrite (in4, HIGH);
+    delay (1000);
+
+    //now go in opposit direction
+    //left motor
+    digitalWrite (in1, LOW);
+    digitalWrite (in2, HIGH);
+    delay (1000);
+    //Right Motor
+    digitalWrite (in3, HIGH);
+    digitalWrite (in4, LOW);
+    delay (1000);
+
+   
+    
+    if (distance > 20 + 8 || distance > 0) {
+     
+     
+     Serial.println("helloFromReverse");
+    
+      
+      // moter will reverse
+      
+      //left motor
+      digitalWrite (in1, LOW);
+      digitalWrite (in2, HIGH);
+      delay (200);
+      //right motor
+      digitalWrite (in3, LOW);
+      digitalWrite (in4, HIGH);
+      delay (200);
+    }
+
+  }
+
+  // if nothing is in front of the robot, it will back up
+  else if (distance > 20 || distance > 0) {
+   
+    
+    // left motor
+    digitalWrite (in1, LOW);
+    digitalWrite (in2, HIGH);
+    delay (200);
+    //right motor
+    digitalWrite (in3, LOW);
+    digitalWrite (in4, HIGH);
+    delay (200);
+  }
+ 
+  
+  
+  
+  
+  Serial.println("hellofrom light sensor testing");
+  
+  if (distance <= 200 || distance >= 50) {
+
+// It will check the light sensors here if the distance is greater 
+  
+
+// this will  turn the robot right 
+
+ 
+ if (analogRead (leftLDR) > analogRead (rightLDR) ) {
+    // Left motor reverse
+    digitalWrite (in1, LOW);
+    digitalWrite (in2, HIGH);
+ 
+    // Right motor forward
+    digitalWrite (in3, HIGH);
+    digitalWrite (in4, LOW);
+ 
+ 
+ 
+ Serial.println("hellofrom robot go right");
+  } 
+
+  // this will turn the robot left
+  else {
+    // Left motor forward
+    digitalWrite (in1, HIGH);
+    digitalWrite (in2, LOW);
+ 
+    // Right motor reverse
+    digitalWrite (in3, LOW);
+    digitalWrite (in4, HIGH);
+  
+  Serial.println("hellofrom Robot Go Left");
+  }
+}
+
+  
+  
+  if (distance < 200 || distance > 50) {
+   
+   Serial.println("Hellofrom lessthan 200");
+
+    // Action 1 check light sensors
+    
+    if ((analogRead (leftLDR) > analogRead (rightLDR) )) {
+    // Left motor reverse
+    digitalWrite (in1, LOW);
+    digitalWrite (in2, HIGH);
+ 
+    // Right motor forward
+    digitalWrite (in3, HIGH);
+    digitalWrite (in4, LOW);
+ 
+  
+  } else if ((analogRead (leftLDR) < analogRead (rightLDR) )) {
+    // Left motor forward
+    digitalWrite (in1, HIGH);
+    digitalWrite (in2, LOW);
+ 
+    // Right motor reverse
+    digitalWrite (in3, LOW);
+    digitalWrite (in4, HIGH);
+    
+ 
+}}}
+
